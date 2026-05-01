@@ -301,7 +301,7 @@ async function analyzeReports() {
     if(data.content && data.content[0]) {
       var raw = data.content[0].text;
       var clean = raw.replace(/```json|```/g,'').trim();
-      analysis = clean;
+      analysis = JSON.parse(clean);
     } else if(data.error) {
       throw new Error('API Hatası: ' + (data.error.message || JSON.stringify(data.error)));
     } else {
