@@ -278,7 +278,7 @@ async function analyzeReports() {
   var iv = setInterval(function(){ mi=(mi+1)%msgs.length; document.getElementById('loadingText').textContent=msgs[mi]; },2000);
   
   try {
-    var resp = await fetch('/.netlify/functions/claude', {
+    var resp = await fetch('/api/analyze', {
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body: JSON.stringify({
