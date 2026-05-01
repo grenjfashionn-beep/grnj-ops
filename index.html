@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GRNJ OPS</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap');
+:root {
+  --navy:#1F3864;--navy-dark:#152847;--gold:#C9A84C;--gold-light:#e8c56a;
+  --red:#C00000;--red-light:#FFE6E6;--orange:#C55A11;--orange-light:#FFF8E7;
+  --green:#1E7145;--green-light:#E2EFDA;--mid:#2E75B6;--white:#FFFFFF;
+  --gray-100:#F8F9FA;--gray-200:#F0F2F5;--gray-300:#E2E6EA;
+  --gray-500:#6C757D;--gray-700:#495057;--gray-900:#212529;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'DM Sans',sans-serif;background:#0f1d35;color:#fff;min-height:100vh;overflow-x:hidden;}
+.header{background:linear-gradient(135deg,#0f1d35 0%,#1a2f52 100%);border-bottom:1px solid rgba(201,168,76,0.2);padding:0 32px;height:64px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+.logo{display:flex;align-items:center;gap:12px;}
+.logo-mark{width:36px;height:36px;background:var(--gold);display:flex;align-items:center;justify-content:center;clip-path:polygon(0 0,85% 0,100% 15%,100% 100%,15% 100%,0 85%);}
+.logo-mark span{font-family:'Bebas Neue',sans-serif;font-size:14px;color:var(--navy-dark);letter-spacing:1px;}
+.logo-text{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:3px;color:#fff;}
+.logo-text span{color:var(--gold);}
+.header-meta{display:flex;align-items:center;gap:16px;}
+.date-badge{font-family:'DM Mono',monospace;font-size:11px;color:rgba(255,255,255,0.5);letter-spacing:1px;text-transform:uppercase;}
+.status-dot{width:8px;height:8px;background:var(--green);border-radius:50%;box-shadow:0 0 8px var(--green);animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.4;}}
+.nav{background:rgba(31,56,100,0.4);border-bottom:1px solid rgba(255,255,255,0.06);padding:0 32px;display:flex;gap:4px;}
+.nav-btn{padding:14px 20px;background:none;border:none;color:rgba(255,255,255,0.5);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;position:relative;transition:color 0.2s;letter-spacing:0.3px;}
+.nav-btn:hover{color:rgba(255,255,255,0.85);}
+.nav-btn.active{color:var(--gold);}
+.nav-btn.active::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--gold);}
+.main{max-width:1100px;margin:0 auto;padding:32px 24px;}
+.page{display:none;animation:fadeIn 0.3s ease;}
+.page.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+.page-title{font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:2px;color:#fff;line-height:1;}
+.page-title span{color:var(--gold);}
+.page-sub{font-size:13px;color:rgba(255,255,255,0.45);margin-top:6px;font-weight:300;}
+.card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:24px;margin-bottom:20px;}
+.card-title{font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);margin-bottom:16px;}
+.report-input{width:100%;min-height:280px;background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:16px;color:rgba(255,255,255,0.85);font-family:'DM Mono',monospace;font-size:12px;line-height:1.7;resize:vertical;transition:border-color 0.2s;outline:none;}
+.report-input:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(201,168,76,0.1);}
+.report-input::placeholder{color:rgba(255,255,255,0.25);}
+.btn-primary{background:var(--gold);color:var(--navy-dark);border:none;padding:14px 32px;border-radius:8px;font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:2px;cursor:pointer;transition:all 0.2s;display:inline-flex;align-items:center;gap:10px;}
+.btn-primary:hover{background:var(--gold-light);transform:translateY(-1px);box-shadow:0 8px 24px rgba(201,168,76,0.3);}
+.btn-primary:disabled{opacity:0.5;cursor:not-allowed;transform:none;}
+.btn-secondary{background:rgba(255,255,255,0.08);color:#fff;border:1px solid rgba(255,255,255,0.15);padding:12px 24px;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;transition:all 0.2s;display:inline-flex;align-items:center;gap:8px;}
+.btn-secondary:hover{background:rgba(255,255,255,0.14);}
+.btn-gold-outline{background:transparent;color:var(--gold);border:1px solid var(--gold);padding:10px 20px;border-radius:6px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;transition:all 0.2s;display:inline-flex;align-items:center;gap:8px;}
+.btn-gold-outline:hover{background:rgba(201,168,76,0.12);}
+.loading-overlay{display:none;position:fixed;inset:0;background:rgba(15,29,53,0.92);backdrop-filter:blur(8px);z-index:200;flex-direction:column;align-items:center;justify-content:center;gap:24px;}
+.loading-overlay.show{display:flex;}
+.loading-logo{font-family:'Bebas Neue',sans-serif;font-size:36px;letter-spacing:4px;color:var(--gold);animation:breathe 1.5s ease-in-out infinite;}
+@keyframes breathe{0%,100%{opacity:0.6;}50%{opacity:1;}}
+.loading-bar{width:240px;height:2px;background:rgba(255,255,255,0.1);border-radius:2px;overflow:hidden;}
+.loading-bar-fill{height:100%;background:var(--gold);border-radius:2px;animation:load 2s ease-in-out infinite;}
+@keyframes load{0%{width:0%;}50%{width:70%;}100%{width:100%;}}
+.loading-text{font-size:12px;font-family:'DM Mono',monospace;color:rgba(255,255,255,0.4);letter-spacing:1px;}
+.priority-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:24px;}
+.priority-card{border-radius:10px;padding:20px;border-left:4px solid;}
+.priority-card.p1{background:rgba(192,0,0,0.12);border-left-color:var(--red);}
+.priority-card.p2{background:rgba(197,90,17,0.12);border-left-color:var(--orange);}
+.priority-card.p3{background:rgba(30,113,69,0.12);border-left-color:var(--green);}
+.priority-label{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:2px;margin-bottom:4px;}
+.p1 .priority-label{color:#ff6b6b;}.p2 .priority-label{color:#ffa06b;}.p3 .priority-label{color:#6bffa0;}
+.priority-desc{font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:14px;font-weight:300;}
+.priority-item{font-size:12.5px;color:rgba(255,255,255,0.82);padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.06);line-height:1.5;font-weight:300;}
+.priority-item:last-child{border-bottom:none;}
+.priority-item strong{color:#fff;font-weight:500;}
+.dept-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+.dept-card{background:rgba(0,0,0,0.2);border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:16px;display:flex;align-items:center;gap:14px;}
+.dept-score-circle{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:18px;flex-shrink:0;}
+.dept-score-circle.high{background:rgba(30,113,69,0.2);border:2px solid var(--green);color:#6bffa0;}
+.dept-score-circle.mid{background:rgba(197,90,17,0.2);border:2px solid var(--orange);color:#ffa06b;}
+.dept-score-circle.low{background:rgba(192,0,0,0.2);border:2px solid var(--red);color:#ff6b6b;}
+.dept-info{flex:1;min-width:0;}
+.dept-name{font-size:12px;font-weight:600;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.dept-person{font-size:11px;color:rgba(255,255,255,0.4);margin-top:2px;}
+.dept-note{font-size:10.5px;color:rgba(255,255,255,0.55);margin-top:4px;line-height:1.4;font-weight:300;}
+.trend{font-size:16px;flex-shrink:0;}
+.wip-table{width:100%;border-collapse:collapse;font-size:12px;}
+.wip-table th{background:rgba(31,56,100,0.6);padding:10px 12px;text-align:left;font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--gold);border-bottom:1px solid rgba(255,255,255,0.08);}
+.wip-table td{padding:10px 12px;border-bottom:1px solid rgba(255,255,255,0.05);color:rgba(255,255,255,0.78);font-family:'DM Mono',monospace;font-size:11.5px;}
+.wip-table tr:hover td{background:rgba(255,255,255,0.03);}
+.status-badge{display:inline-flex;align-items:center;gap:5px;padding:3px 8px;border-radius:4px;font-size:10px;font-weight:600;font-family:'DM Sans',sans-serif;}
+.status-ok{background:rgba(30,113,69,0.2);color:#6bffa0;}
+.status-progress{background:rgba(46,117,182,0.2);color:#6bb5ff;}
+.status-wait{background:rgba(197,90,17,0.2);color:#ffa06b;}
+.status-issue{background:rgba(192,0,0,0.2);color:#ff6b6b;}
+.risk-high{color:#ff6b6b;font-weight:600;}.risk-mid{color:#ffa06b;}.risk-low{color:#6bffa0;}
+.section-divider{display:flex;align-items:center;gap:16px;margin:28px 0 20px;}
+.section-divider-label{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.3);white-space:nowrap;}
+.section-divider-line{flex:1;height:1px;background:rgba(255,255,255,0.07);}
+.blok-table{width:100%;border-collapse:collapse;font-size:12px;}
+.blok-table th{background:rgba(31,56,100,0.6);padding:10px 12px;text-align:left;font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--gold);border-bottom:1px solid rgba(255,255,255,0.08);}
+.blok-table td{padding:10px 12px;border-bottom:1px solid rgba(255,255,255,0.05);color:rgba(255,255,255,0.78);font-size:12px;}
+.acil-bugun{display:inline-block;padding:3px 8px;background:rgba(192,0,0,0.2);color:#ff6b6b;border-radius:4px;font-size:10px;font-weight:700;font-family:'DM Mono',monospace;}
+.acil-hafta{display:inline-block;padding:3px 8px;background:rgba(197,90,17,0.2);color:#ffa06b;border-radius:4px;font-size:10px;font-weight:700;font-family:'DM Mono',monospace;}
+.history-list{display:flex;flex-direction:column;gap:12px;}
+.history-item{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:18px 20px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;}
+.history-item:hover{background:rgba(255,255,255,0.06);}
+.history-date{font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:1px;color:var(--gold);}
+.history-meta{font-size:12px;color:rgba(255,255,255,0.4);margin-top:3px;font-family:'DM Mono',monospace;}
+.history-badges{display:flex;gap:8px;align-items:center;}
+.hist-badge{padding:4px 10px;border-radius:20px;font-size:10px;font-weight:600;}
+.hist-p1{background:rgba(192,0,0,0.2);color:#ff6b6b;}
+.hist-p2{background:rgba(197,90,17,0.2);color:#ffa06b;}
+.hist-dept{background:rgba(46,117,182,0.2);color:#6bb5ff;}
+.empty-state{text-align:center;padding:64px 32px;}
+.empty-icon{font-size:48px;margin-bottom:16px;opacity:0.4;}
+.empty-title{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:2px;color:rgba(255,255,255,0.3);margin-bottom:8px;}
+.empty-sub{font-size:13px;color:rgba(255,255,255,0.2);font-weight:300;}
+::-webkit-scrollbar{width:6px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.15);border-radius:3px;}
+@media(max-width:768px){
+  .priority-grid{grid-template-columns:1fr;}
+  .dept-grid{grid-template-columns:1fr 1fr;}
+  .header{padding:0 16px;}
+  .main{padding:20px 16px;}
+  .nav{padding:0 16px;overflow-x:auto;}
+}
+</style>
+</head>
+<body>
+
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="loading-logo">GRNJ OPS</div>
+  <div class="loading-bar"><div class="loading-bar-fill"></div></div>
+  <div class="loading-text" id="loadingText">ANALİZ EDİLİYOR...</div>
+</div>
+
+<header class="header">
+  <div class="logo">
+    <div class="logo-mark"><span>G</span></div>
+    <div class="logo-text">GRNJ <span>OPS</span></div>
+  </div>
+  <div class="header-meta">
+    <div class="date-badge" id="headerDate"></div>
+    <div class="status-dot"></div>
+  </div>
+</header>
+
+<nav class="nav">
+  <button class="nav-btn active" id="nav-rapor" onclick="showPage('rapor',this)">📋 Rapor Analizi</button>
+  <button class="nav-btn" id="nav-sonuc" onclick="showPage('sonuc',this)">📊 Analiz Sonucu</button>
+  <button class="nav-btn" id="nav-gecmis" onclick="showPage('gecmis',this)">🗂 Geçmiş</button>
+</nav>
+
+<main class="main">
+
+  <div class="page active" id="page-rapor">
+    <div style="margin-bottom:28px">
+      <div class="page-title">RAPOR <span>ANALİZİ</span></div>
+      <div class="page-sub">Günlük departman raporlarını yapıştırın — CEO Brifing ve Operasyon Takip otomatik üretilir</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Günlük Raporlar</div>
+      <textarea class="report-input" id="reportInput" placeholder="Tüm departman raporlarını buraya yapıştırın...
+
+📍 FARUK — 27.04.2026 | 09:30
+📌 BUGÜNÜN PLANI: ...
+
+📍 RENGİN | 27.04.2026 | 09:30
+📌 BUGÜN: ..."></textarea>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-top:16px;flex-wrap:wrap;gap:12px;">
+        <div style="display:flex;gap:10px;">
+          <button class="btn-primary" id="analyzeBtn" onclick="analyzeReports()">⚡ ANALİZ ET</button>
+          <button class="btn-secondary" onclick="document.getElementById('reportInput').value=''">✕ Temizle</button>
+        </div>
+        <div style="font-size:11px;color:rgba(255,255,255,0.25);font-family:'DM Mono',monospace;">Claude API ile analiz</div>
+      </div>
+    </div>
+
+    <div class="card" style="background:rgba(201,168,76,0.05);border-color:rgba(201,168,76,0.15)">
+      <div class="card-title" style="color:rgba(201,168,76,0.7)">Nasıl Kullanılır</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px">
+        <div><div style="font-size:24px;margin-bottom:8px">1</div><div style="font-size:13px;font-weight:600;margin-bottom:4px">Raporları Yapıştır</div><div style="font-size:12px;color:rgba(255,255,255,0.4);line-height:1.5;font-weight:300">WhatsApp'tan gelen tüm departman raporlarını metin kutusuna yapıştırın</div></div>
+        <div><div style="font-size:24px;margin-bottom:8px">2</div><div style="font-size:13px;font-weight:600;margin-bottom:4px">Analiz Et</div><div style="font-size:12px;color:rgba(255,255,255,0.4);line-height:1.5;font-weight:300">Butona basın — 15-20 saniyede P1/P2/P3, departman skorları ve WIP tablosu hazır</div></div>
+        <div><div style="font-size:24px;margin-bottom:8px">3</div><div style="font-size:13px;font-weight:600;margin-bottom:4px">PDF & Excel İndir</div><div style="font-size:12px;color:rgba(255,255,255,0.4);line-height:1.5;font-weight:300">CEO Brifing PDF ve Operasyon Takip Excel hazır — tek tıkla indirin</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page" id="page-sonuc">
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:28px;">
+      <div>
+        <div class="page-title">ANALİZ <span>SONUCU</span></div>
+        <div class="page-sub" id="resultDate">—</div>
+      </div>
+      <div style="display:flex;gap:12px;">
+        <button class="btn-gold-outline" onclick="downloadPDF()">⬇ PDF İndir</button>
+        <button class="btn-gold-outline" onclick="downloadExcel()">⬇ Excel İndir</button>
+      </div>
+    </div>
+
+    <div class="priority-grid">
+      <div class="priority-card p1">
+        <div class="priority-label">🔴 P1</div>
+        <div class="priority-desc">Bugün çözülmesi gereken</div>
+        <div id="p1-items"><div class="priority-item" style="color:rgba(255,255,255,0.3);font-style:italic">Analiz bekleniyor...</div></div>
+      </div>
+      <div class="priority-card p2">
+        <div class="priority-label">🟡 P2</div>
+        <div class="priority-desc">Bu hafta takip edilecek</div>
+        <div id="p2-items"><div class="priority-item" style="color:rgba(255,255,255,0.3);font-style:italic">Analiz bekleniyor...</div></div>
+      </div>
+      <div class="priority-card p3">
+        <div class="priority-label">🟢 P3</div>
+        <div class="priority-desc">Bilgi, aksiyon gerekmez</div>
+        <div id="p3-items"><div class="priority-item" style="color:rgba(255,255,255,0.3);font-style:italic">Analiz bekleniyor...</div></div>
+      </div>
+    </div>
+
+    <div class="section-divider"><div class="section-divider-label">Departman Skorları</div><div class="section-divider-line"></div></div>
+    <div class="dept-grid" id="deptGrid"></div>
+
+    <div class="section-divider"><div class="section-divider-label">WIP Durumu</div><div class="section-divider-line"></div></div>
+    <div class="card" style="padding:0;overflow:hidden">
+      <table class="wip-table">
+        <thead><tr><th>Sipariş / Model</th><th>Adet</th><th>Kesim</th><th>Dikim</th><th>QC</th><th>Ütü-Pkt</th><th>Sevk</th><th>Risk</th></tr></thead>
+        <tbody id="wipBody"><tr><td colspan="8" style="text-align:center;padding:32px;color:rgba(255,255,255,0.2);font-style:italic">Analiz bekleniyor...</td></tr></tbody>
+      </table>
+    </div>
+
+    <div class="section-divider"><div class="section-divider-label">Açık Bloklar</div><div class="section-divider-line"></div></div>
+    <div class="card" style="padding:0;overflow:hidden">
+      <table class="blok-table">
+        <thead><tr><th>Blok</th><th>Açık Gün</th><th>Sahibi</th><th>Aciliyet</th><th>Beklenen Aksiyon</th></tr></thead>
+        <tbody id="blokBody"><tr><td colspan="5" style="text-align:center;padding:32px;color:rgba(255,255,255,0.2);font-style:italic">Analiz bekleniyor...</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="page" id="page-gecmis">
+    <div style="margin-bottom:28px">
+      <div class="page-title">GEÇMİŞ <span>ANALİZLER</span></div>
+      <div class="page-sub">Önceki günlerin analizleri — tekrar görüntüleyin veya indirin</div>
+    </div>
+    <div class="history-list" id="historyList">
+      <div class="empty-state">
+        <div class="empty-icon">📁</div>
+        <div class="empty-title">Henüz Analiz Yok</div>
+        <div class="empty-sub">Rapor Analizi sayfasından ilk analizinizi yapın</div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<script>
+var analysisHistory = [];
+try { analysisHistory = JSON.parse(localStorage.getItem('grnj_history') || '[]'); } catch(e) { analysisHistory = []; }
+var currentAnalysis = null;
+
+document.getElementById('headerDate').textContent = new Date().toLocaleDateString('tr-TR',{day:'2-digit',month:'long',year:'numeric'});
+renderHistory();
+
+function showPage(page, btn) {
+  document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('active'); });
+  document.querySelectorAll('.nav-btn').forEach(function(b){ b.classList.remove('active'); });
+  document.getElementById('page-'+page).classList.add('active');
+  if(btn) btn.classList.add('active');
+}
+
+async function analyzeReports() {
+  var input = document.getElementById('reportInput').value.trim();
+  if(!input) { alert('Lütfen raporları yapıştırın.'); return; }
+  
+  var btn = document.getElementById('analyzeBtn');
+  btn.disabled = true;
+  document.getElementById('loadingOverlay').classList.add('show');
+  
+  var msgs = ['ANALİZ EDİLİYOR...','ÖNCELİKLER BELİRLENİYOR...','DEPARTMANLAR SKORLANIYOR...','WIP TABLOSU HAZIRLANIYOR...','TAMAMLANIYOR...'];
+  var mi = 0;
+  var iv = setInterval(function(){ mi=(mi+1)%msgs.length; document.getElementById('loadingText').textContent=msgs[mi]; },2000);
+  
+  try {
+    var resp = await fetch('/.netlify/functions/claude', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        model:'claude-sonnet-4-5',
+        max_tokens:4000,
+        system:'Sen Grenj Fashion operasyon asistanısın. Şirket: İstanbul kadın giyim, 1.2M adet/yıl, sabit gider 800.000 TL/ay, breakeven 17.800 adet/ay. Ekip: Rengin (Kontrol Kulesi), Faruk (Üretim/Tedarik), Erhan (QC/Sevkiyat), Oktay (Kesimhane), Ömer (Fason), Orhan (Ütü-Paket), Dilan (Online), Ceren (Modelhane), Yekta (QC Evrak). SADECE JSON döndür, başka hiçbir şey yazma: {"tarih":"GG.AA.YYYY","p1":[{"baslik":"...","aciklama":"..."}],"p2":[{"baslik":"...","aciklama":"..."}],"p3":["..."],"departmanlar":[{"isim":"...","rol":"...","skor":8,"trend":"→","iyi":"...","eksik":"..."}],"wip":[{"siparis":"...","adet":"...","kesim":"OK","dikim":"devam","qc":"bekle","utu":"bekle","sevk":"bekle","risk":"Orta"}],"bloklar":[{"blok":"...","gun":"...","sahibi":"...","aciliyet":"BUGÜN","aksiyon":"..."}]}',
+        messages:[{role:'user',content:'Şu günlük departman raporlarını analiz et:\n\n'+input}]
+      })
+    });
+    
+    var text = await resp.text();
+    var data;
+    try {
+      data = JSON.parse(text);
+    } catch(e) {
+      throw new Error('Sunucu yanıtı okunamadı: ' + text.substring(0,100));
+    }
+    
+    var analysis;
+    if(data.content && data.content[0]) {
+      var raw = data.content[0].text;
+      var clean = raw.replace(/```json|```/g,'').trim();
+      analysis = JSON.parse(clean);
+    } else if(data.error) {
+      throw new Error('API Hatası: ' + (data.error.message || JSON.stringify(data.error)));
+    } else {
+      throw new Error('Beklenmeyen yanıt: ' + JSON.stringify(data).substring(0,100));
+    }
+    
+    analysis.rawInput = input;
+    analysis.timestamp = new Date().toISOString();
+    currentAnalysis = analysis;
+    analysisHistory.unshift(analysis);
+    if(analysisHistory.length > 30) analysisHistory = analysisHistory.slice(0,30);
+    try { localStorage.setItem('grnj_history', JSON.stringify(analysisHistory)); } catch(e){}
+    
+    renderAnalysis(analysis);
+    renderHistory();
+    clearInterval(iv);
+    document.getElementById('loadingOverlay').classList.remove('show');
+    btn.disabled = false;
+    showPage('sonuc', document.getElementById('nav-sonuc'));
+    
+  } catch(err) {
+    clearInterval(iv);
+    document.getElementById('loadingOverlay').classList.remove('show');
+    btn.disabled = false;
+    alert('Hata: ' + err.message);
+  }
+}
+
+function renderAnalysis(a) {
+  document.getElementById('resultDate').textContent = (a.tarih||'—') + ' · GRNJ OPS Analizi';
+  
+  function renderItems(items, id) {
+    var el = document.getElementById(id);
+    if(!items || items.length===0) { el.innerHTML='<div class="priority-item" style="color:rgba(255,255,255,0.35)">—</div>'; return; }
+    if(typeof items[0]==='string') {
+      el.innerHTML = items.map(function(i){ return '<div class="priority-item">• '+i+'</div>'; }).join('');
+    } else {
+      el.innerHTML = items.map(function(i){ return '<div class="priority-item"><strong>'+(i.baslik||i)+'</strong>'+(i.aciklama?'<br>'+i.aciklama:'')+'</div>'; }).join('');
+    }
+  }
+  renderItems(a.p1,'p1-items');
+  renderItems(a.p2,'p2-items');
+  renderItems(a.p3,'p3-items');
+  
+  var dg = document.getElementById('deptGrid');
+  if(a.departmanlar && a.departmanlar.length>0) {
+    dg.innerHTML = a.departmanlar.map(function(d){
+      var sc=parseInt(d.skor)||0;
+      var cls=sc>=8?'high':sc>=6?'mid':'low';
+      var tc=d.trend==='↑'?'#6bffa0':d.trend==='↓'?'#ff6b6b':'#6bb5ff';
+      return '<div class="dept-card"><div class="dept-score-circle '+cls+'">'+d.skor+'</div><div class="dept-info"><div class="dept-name">'+d.isim+'</div><div class="dept-person">'+d.rol+'</div><div class="dept-note">'+(d.iyi||'')+'</div></div><div class="trend" style="color:'+tc+'">'+(d.trend||'→')+'</div></div>';
+    }).join('');
+  } else {
+    dg.innerHTML='<div style="color:rgba(255,255,255,0.3);font-size:13px;grid-column:1/-1;text-align:center;padding:24px">Departman verisi bulunamadı</div>';
+  }
+  
+  var wb = document.getElementById('wipBody');
+  if(a.wip && a.wip.length>0) {
+    wb.innerHTML = a.wip.map(function(w){
+      function sb(s){
+        if(!s) return '<span class="status-badge status-wait">—</span>';
+        var sl=s.toLowerCase();
+        if(sl==='ok'||sl==='✅') return '<span class="status-badge status-ok">✅</span>';
+        if(sl==='devam') return '<span class="status-badge status-progress">🔄</span>';
+        if(sl==='bekle') return '<span class="status-badge status-wait">⏳</span>';
+        return '<span class="status-badge status-issue">⚠️</span>';
+      }
+      var rc=w.risk==='Yüksek'?'risk-high':w.risk==='Orta'?'risk-mid':'risk-low';
+      return '<tr><td style="font-weight:500;color:#fff">'+(w.siparis||'—')+'</td><td>'+(w.adet||'—')+'</td><td>'+sb(w.kesim)+'</td><td>'+sb(w.dikim)+'</td><td>'+sb(w.qc)+'</td><td>'+sb(w.utu)+'</td><td>'+sb(w.sevk)+'</td><td class="'+rc+'">'+(w.risk||'—')+'</td></tr>';
+    }).join('');
+  } else {
+    wb.innerHTML='<tr><td colspan="8" style="text-align:center;padding:24px;color:rgba(255,255,255,0.25)">WIP verisi bulunamadı</td></tr>';
+  }
+  
+  var bb = document.getElementById('blokBody');
+  if(a.bloklar && a.bloklar.length>0) {
+    bb.innerHTML = a.bloklar.map(function(b){
+      var ac=b.aciliyet==='BUGÜN'?'acil-bugun':'acil-hafta';
+      return '<tr><td style="font-weight:500;color:#fff">'+b.blok+'</td><td>'+(b.gun||'—')+'</td><td>'+(b.sahibi||'—')+'</td><td><span class="'+ac+'">'+b.aciliyet+'</span></td><td>'+b.aksiyon+'</td></tr>';
+    }).join('');
+  } else {
+    bb.innerHTML='<tr><td colspan="5" style="text-align:center;padding:24px;color:rgba(255,255,255,0.25)">Açık blok bulunamadı</td></tr>';
+  }
+}
+
+function renderHistory() {
+  var list = document.getElementById('historyList');
+  if(analysisHistory.length===0) {
+    list.innerHTML='<div class="empty-state"><div class="empty-icon">📁</div><div class="empty-title">Henüz Analiz Yok</div><div class="empty-sub">Rapor Analizi sayfasından ilk analizinizi yapın</div></div>';
+    return;
+  }
+  list.innerHTML = analysisHistory.map(function(a,i){
+    var p1c=(a.p1||[]).length, p2c=(a.p2||[]).length, dc=(a.departmanlar||[]).length;
+    var d=new Date(a.timestamp);
+    var ts=d.toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'});
+    return '<div class="history-item" onclick="loadHistory('+i+')"><div><div class="history-date">'+(a.tarih||'—')+'</div><div class="history-meta">'+d.toLocaleDateString('tr-TR')+' · '+ts+' · '+dc+' departman</div></div><div class="history-badges"><span class="hist-badge hist-p1">'+p1c+' P1</span><span class="hist-badge hist-p2">'+p2c+' P2</span><span class="hist-badge hist-dept">'+dc+' Dept</span><button class="btn-gold-outline" style="padding:6px 12px;font-size:11px" onclick="event.stopPropagation();currentAnalysis=analysisHistory['+i+'];downloadPDF()">⬇</button></div></div>';
+  }).join('');
+}
+
+function loadHistory(i) {
+  currentAnalysis = analysisHistory[i];
+  renderAnalysis(currentAnalysis);
+  showPage('sonuc', document.getElementById('nav-sonuc'));
+}
+
+function downloadPDF() {
+  if(!currentAnalysis){ alert('Önce analiz yapın.'); return; }
+  var a = currentAnalysis;
+  var tarih = a.tarih || new Date().toLocaleDateString('tr-TR');
+  var p1h=(a.p1||[]).map(function(i){ return '<div class="item"><div class="item-title">'+(i.baslik||i)+'</div>'+(i.aciklama?'<div class="item-body">'+i.aciklama+'</div>':'')+'</div>'; }).join('');
+  var p2h=(a.p2||[]).map(function(i){ return '<div class="item"><div class="item-title">'+(i.baslik||i)+'</div>'+(i.aciklama?'<div class="item-body">'+i.aciklama+'</div>':'')+'</div>'; }).join('');
+  var p3h=(a.p3||[]).map(function(i){ return '<div class="item">✅ '+i+'</div>'; }).join('');
+  var dh=(a.departmanlar||[]).map(function(d){ var sc=parseInt(d.skor)||0; var bg=sc>=8?'#E2EFDA':sc>=6?'#FFF8E7':'#FFE6E6'; var fg=sc>=8?'#1E7145':sc>=6?'#C55A11':'#C00000'; return '<tr><td>'+d.isim+'</td><td>'+d.rol+'</td><td style="background:'+bg+';color:'+fg+';font-weight:700;text-align:center">'+d.skor+'/10</td><td style="text-align:center">'+(d.trend||'→')+'</td><td>'+(d.iyi||'')+'</td><td>'+(d.eksik||'')+'</td></tr>'; }).join('');
+  var wh=(a.wip||[]).map(function(w){ return '<tr><td>'+w.siparis+'</td><td>'+w.adet+'</td><td>'+w.kesim+'</td><td>'+w.dikim+'</td><td>'+w.qc+'</td><td>'+w.utu+'</td><td>'+w.sevk+'</td><td>'+w.risk+'</td></tr>'; }).join('');
+  var bh=(a.bloklar||[]).map(function(b){ return '<tr><td>'+b.blok+'</td><td>'+(b.gun||'—')+'</td><td>'+(b.sahibi||'—')+'</td><td style="color:'+(b.aciliyet==='BUGÜN'?'#C00000':'#C55A11')+';font-weight:700">'+b.aciliyet+'</td><td>'+b.aksiyon+'</td></tr>'; }).join('');
+  var html='<!DOCTYPE html><html><head><meta charset="UTF-8"><style>@import url(\'https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap\');body{font-family:\'DM Sans\',Arial,sans-serif;margin:0;padding:24px;color:#333;font-size:12px}.header{background:#1F3864;color:white;padding:20px 24px;margin-bottom:24px;display:flex;justify-content:space-between;align-items:center}.header h1{font-family:\'Bebas Neue\',sans-serif;font-size:28px;letter-spacing:3px;margin:0;color:#C9A84C}.header .meta{font-size:11px;color:rgba(255,255,255,0.6);text-align:right}.section{margin-bottom:24px}.section-title{background:#1F3864;color:#C9A84C;padding:8px 12px;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px}.p-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:16px}.p-card{border-radius:6px;padding:14px;border-left:4px solid}.p1-card{background:#FFE6E6;border-left-color:#C00000}.p2-card{background:#FFF8E7;border-left-color:#C55A11}.p3-card{background:#E2EFDA;border-left-color:#1E7145}.p-label{font-family:\'Bebas Neue\',sans-serif;font-size:18px;letter-spacing:2px;margin-bottom:8px}.p1-card .p-label{color:#C00000}.p2-card .p-label{color:#C55A11}.p3-card .p-label{color:#1E7145}.item{padding:6px 0;border-bottom:1px solid rgba(0,0,0,0.06);font-size:11.5px;line-height:1.5}.item:last-child{border-bottom:none}.item-title{font-weight:600;color:#1F3864;margin-bottom:2px}.item-body{color:#555;font-weight:300}table{width:100%;border-collapse:collapse;font-size:11px}th{background:#1F3864;color:#C9A84C;padding:8px;text-align:left;font-size:10px;letter-spacing:1px;text-transform:uppercase}td{padding:8px;border-bottom:1px solid #E8E8E8}tr:nth-child(even) td{background:#F8F9FA}.footer{margin-top:32px;padding-top:12px;border-top:2px solid #1F3864;display:flex;justify-content:space-between;font-size:10px;color:#888}</style></head><body><div class="header"><h1>GRNJ OPS — CEO BRİFİNG</h1><div class="meta"><div>'+tarih+'</div><div>GRNJ OPS · Grenj Fashion</div></div></div><div class="section"><div class="section-title">01 — ÖNCELİK ANALİZİ</div><div class="p-grid"><div class="p-card p1-card"><div class="p-label">P1 — BUGÜN</div>'+(p1h||'<div class="item">—</div>')+'</div><div class="p-card p2-card"><div class="p-label">P2 — BU HAFTA</div>'+(p2h||'<div class="item">—</div>')+'</div><div class="p-card p3-card"><div class="p-label">P3 — BİLGİ</div>'+(p3h||'<div class="item">—</div>')+'</div></div></div><div class="section"><div class="section-title">02 — DEPARTMAN SKORLARI</div><table><thead><tr><th>Kişi</th><th>Rol</th><th>Skor</th><th>Trend</th><th>İyi Yapılan</th><th>Eksik</th></tr></thead><tbody>'+dh+'</tbody></table></div><div class="section"><div class="section-title">03 — WIP DURUMU</div><table><thead><tr><th>Sipariş</th><th>Adet</th><th>Kesim</th><th>Dikim</th><th>QC</th><th>Ütü-Pkt</th><th>Sevk</th><th>Risk</th></tr></thead><tbody>'+wh+'</tbody></table></div><div class="section"><div class="section-title">04 — AÇIK BLOKLAR</div><table><thead><tr><th>Blok</th><th>Gün</th><th>Sahibi</th><th>Aciliyet</th><th>Aksiyon</th></tr></thead><tbody>'+bh+'</tbody></table></div><div class="footer"><span>GRNJ OPS — Grenj Fashion</span><span>'+tarih+' · Gizli</span></div></body></html>';
+  var blob=new Blob([html],{type:'text/html;charset=utf-8'});
+  var url=URL.createObjectURL(blob);
+  var link=document.createElement('a');
+  link.href=url; link.download='GRNJ_OPS_'+tarih.replace(/\./g,'')+'.html'; link.click();
+  URL.revokeObjectURL(url);
+}
+
+function downloadExcel() {
+  if(!currentAnalysis){ alert('Önce analiz yapın.'); return; }
+  var a=currentAnalysis;
+  var tarih=a.tarih||new Date().toLocaleDateString('tr-TR');
+  function esc(s){ if(!s) return ''; var t=String(s); if(t.includes(',')|| t.includes('"')||t.includes('\n')) return '"'+t.replace(/"/g,'""')+'"'; return t; }
+  var csv='\uFEFF';
+  csv+='GRNJ OPS — OPERASYON TAKİP\nTarih: '+tarih+'\n\n';
+  csv+='ÖNCELİK ANALİZİ\nÖncelik,Başlık,Açıklama\n';
+  (a.p1||[]).forEach(function(i){ csv+='P1 — BUGÜN,'+esc(i.baslik||i)+','+esc(i.aciklama||'')+'\n'; });
+  (a.p2||[]).forEach(function(i){ csv+='P2 — BU HAFTA,'+esc(i.baslik||i)+','+esc(i.aciklama||'')+'\n'; });
+  (a.p3||[]).forEach(function(i){ csv+='P3 — BİLGİ,'+esc(i)+',\n'; });
+  csv+='\nDEPARTMAN SKORLARI\nKişi,Rol,Skor,Trend,İyi Yapılan,Eksik\n';
+  (a.departmanlar||[]).forEach(function(d){ csv+=esc(d.isim)+','+esc(d.rol)+','+d.skor+','+(d.trend||'→')+','+esc(d.iyi||'')+','+esc(d.eksik||'')+'\n'; });
+  csv+='\nWIP DURUMU\nSipariş,Adet,Kesim,Dikim,QC,Ütü-Pkt,Sevk,Risk\n';
+  (a.wip||[]).forEach(function(w){ csv+=esc(w.siparis)+','+esc(w.adet)+','+esc(w.kesim)+','+esc(w.dikim)+','+esc(w.qc)+','+esc(w.utu)+','+esc(w.sevk)+','+esc(w.risk)+'\n'; });
+  csv+='\nAÇIK BLOKLAR\nBlok,Açık Gün,Sahibi,Aciliyet,Beklenen Aksiyon\n';
+  (a.bloklar||[]).forEach(function(b){ csv+=esc(b.blok)+','+esc(b.gun||'—')+','+esc(b.sahibi||'—')+','+esc(b.aciliyet)+','+esc(b.aksiyon)+'\n'; });
+  var blob=new Blob([csv],{type:'text/csv;charset=utf-8'});
+  var url=URL.createObjectURL(blob);
+  var link=document.createElement('a');
+  link.href=url; link.download='GRNJ_OPS_Takip_'+tarih.replace(/\./g,'')+'.csv'; link.click();
+  URL.revokeObjectURL(url);
+}
+</script>
+</body>
+</html>
