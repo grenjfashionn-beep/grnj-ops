@@ -292,7 +292,7 @@ async function analyzeReports() {
     
 
     try {
-      
+      var data = await resp.json();
     } catch(e) {
       throw new Error('Sunucu yanıtı okunamadı: ' + text.substring(0,100));
     }
