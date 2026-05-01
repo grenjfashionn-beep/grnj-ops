@@ -18,14 +18,12 @@ app.post('/api/analyze', async (req, res) => {
       body: JSON.stringify(req.body)
     });
     const data = await response.json();
-    const raw = data.content && data.content[0] ? data.content[0].text : '';
-    const clean = raw.replace(/```json|```/g,'').trim();
-    try {
-      const parsed = JSON.parse(clean);
-      res.json({content:[{text: JSON.stringify(parsed)}]});
-    } catch(e) {
-      res.json({content:[{text: clean}], parseError: e.message});
+    if (data.content && data.content[0]) {
+      const text = data.content[0].text;
+      const clean = text.replace(/[\u2018\u2019\u201C\u201D]/g, '"').replace(/```json|```/g,'').trim();
+      data.content[0].text = clean;
     }
+    res.json(data);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
