@@ -3,7 +3,7 @@ const fetch = require('node-fetch');
 const path = require('path');
 const app = express();
 
-app.use(express.json());
+app.use(express.json({limit:'10mb'}));
 app.use(express.static(path.join(__dirname)));
 
 app.post('/api/analyze', async (req, res) => {
@@ -17,8 +17,9 @@ app.post('/api/analyze', async (req, res) => {
       },
       body: JSON.stringify(req.body)
     });
-    const data = await response.json();
-    res.json(data);
+    const text = await response.text();
+    res.setHeader('Content-Type','application/json');
+    res.send(text);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
