@@ -289,10 +289,10 @@ async function analyzeReports() {
       })
     });
     
-    
-
+    var text = await resp.json(); var data = text;
+    var data;
     try {
-      var data = await resp.json();
+      
     } catch(e) {
       throw new Error('Sunucu yanıtı okunamadı: ' + text.substring(0,100));
     }
@@ -301,7 +301,7 @@ async function analyzeReports() {
     if(data.content && data.content[0]) {
       var raw = data.content[0].text;
       var clean = raw.replace(/```json|```/g,'').trim();
-      ry { analysis = JSON.parse(clean); } catch(e) { analysis = {p1:[{baslik:"Analiz",aciklama:clean}],p2:[],p3:[],departmanlar:[],wip:[],bloklar:[]} }
+      analysis = JSON.parse(clean);
     } else if(data.error) {
       throw new Error('API Hatası: ' + (data.error.message || JSON.stringify(data.error)));
     } else {
