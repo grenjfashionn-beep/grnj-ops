@@ -12,7 +12,7 @@ exports.handler = async (event) => {
   }
   try {
     const body = JSON.parse(event.body);
-    body.max_tokens = 2000;
+    body.max_tokens = 8000;
     body.model = 'claude-haiku-4-5-20251001';
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
