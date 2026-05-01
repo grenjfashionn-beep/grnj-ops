@@ -17,9 +17,15 @@ app.post('/api/analyze', async (req, res) => {
       },
       body: JSON.stringify(req.body)
     });
-    const text = await response.text();
-    res.setHeader('Content-Type','application/json');
-    res.send(text);
+    const data = await response.json();
+    const raw = data.content && data.content[0] ? data.content[0].text : '';
+    const clean = raw.replace(/```json|```/g,'').trim();
+    try {
+      const parsed = JSON.parse(clean);
+      res.json({content:[{text: JSON.stringify(parsed)}]});
+    } catch(e) {
+      res.json({content:[{text: clean}], parseError: e.message});
+    }
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
